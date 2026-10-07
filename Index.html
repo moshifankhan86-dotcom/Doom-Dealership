@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doom Car Store | Supercars</title>
+<style>
+:root{--bg:#0a0a0c;--card:#14141a;--card2:#1b1b23;--red:#e10600;--red2:#ff3b30;--text:#f2f2f5;--muted:#9a9aa8;--line:#2a2a35;--ok:#2ecc71}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+header{position:sticky;top:0;z-index:50;background:rgba(10,10,12,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+.logo{font-size:1.6rem;font-weight:900;letter-spacing:3px}
+.logo span{color:var(--red)}
+.nav-links{display:flex;gap:24px;font-size:.9rem;color:var(--muted)}
+.nav-links a:hover{color:#fff}
+.cart-btn{position:relative;background:var(--red);color:#fff;border:0;padding:10px 18px;border-radius:30px;font-weight:700}
+.cart-btn:hover{background:var(--red2)}
+.badge{position:absolute;top:-6px;right:-4px;background:#fff;color:#000;border-radius:50%;min-width:22px;height:22px;font-size:.75rem;display:flex;align-items:center;justify-content:center;font-weight:800}
+.hero{min-height:82vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(circle at 50% 30%,#3a0a08 0%,#0a0a0c 65%)}
+.hero h1{font-size:clamp(2.6rem,8vw,6rem);font-weight:900;letter-spacing:4px;line-height:1.05}
+.hero h1 span{color:var(--red);text-shadow:0 0 40px rgba(225,6,0,.6)}
+.hero p{color:var(--muted);max-width:560px;margin:18px auto 30px;font-size:1.1rem}
+.cta{display:inline-block;background:var(--red);color:#fff;padding:14px 34px;border-radius:40px;font-weight:700;letter-spacing:1px;border:0}
+.cta:hover{background:var(--red2)}
+.stats{display:flex;gap:40px;justify-content:center;margin-top:44px;flex-wrap:wrap}
+.stats b{display:block;font-size:1.8rem;color:var(--red)}
+.stats small{color:var(--muted)}
+section{max-width:1200px;margin:auto;padding:60px 20px}
+h2.title{font-size:2rem;letter-spacing:2px;margin-bottom:6px}
+h2.title span{color:var(--red)}
+.sub{color:var(--muted);margin-bottom:26px}
+.tools{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+.tools input,.tools select{background:var(--card);border:1px solid var(--line);color:var(--text);padding:12px 16px;border-radius:10px;font-size:.95rem;outline:none}
+.tools input{flex:1;min-width:200px}
+.tools input:focus,.tools select:focus{border-color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
+.car{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.25s;display:flex;flex-direction:column}
+.car:hover{transform:translateY(-6px);border-color:var(--red);box-shadow:0 12px 40px rgba(225,6,0,.18)}
+.pic{background:linear-gradient(160deg,#1f1f29,#0e0e13);padding:20px 14px 6px;position:relative}
+.tag{position:absolute;top:12px;left:12px;background:var(--red);font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:1px}
+.info{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.brand{color:var(--red);font-size:.75rem;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.info h3{font-size:1.15rem}
+.specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:.72rem;color:var(--muted);text-align:center}
+.specs div{background:var(--card2);padding:7px 2px;border-radius:8px}
+.specs b{display:block;color:var(--text);font-size:.85rem}
+.price{font-size:1.3rem;font-weight:800;margin-top:4px}
+.stock{font-size:.75rem;color:var(--ok)}
+.stock.low{color:#f39c12}
+.buy{display:flex;gap:8px;margin-top:auto;padding-top:8px}
+.qty{display:flex;align-items:center;background:var(--card2);border-radius:10px;border:1px solid var(--line)}
+.qty button{background:none;border:0;color:#fff;width:32px;height:38px;font-size:1.1rem}
+.qty button:hover{color:var(--red)}
+.qty span{min-width:24px;text-align:center;font-weight:700}
+.add{flex:1;background:var(--red);color:#fff;border:0;border-radius:10px;font-weight:700;padding:0 10px}
+.add:hover{background:var(--red2)}
+.about{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.feat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px}
+.feat .ic{font-size:2rem}
+.feat h4{margin:10px 0 6px}
+.feat p{color:var(--muted);font-size:.9rem}
+footer{border-top:1px solid var(--line);text-align:center;padding:34px 20px;color:var(--muted);font-size:.9rem}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:90;display:none}
+.overlay.show{display:block}
+.drawer{position:fixed;top:0;right:-460px;width:min(440px,100%);height:100%;background:var(--card);z-index:100;transition:.3s;display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.drawer.open{right:0}
+.d-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}
+.x{background:none;border:0;color:#fff;font-size:1.6rem}
+.d-body{flex:1;overflow:auto;padding:14px 20px}
+.item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+.item .th{width:90px;background:#101015;border-radius:10px;padding:4px;flex-shrink:0}
+.item .meta{flex:1;font-size:.9rem}
+.item .meta small{color:var(--muted)}
+.item .qty button{height:30px;width:28px}
+.rm{background:none;border:0;color:var(--red2);font-size:.75rem;margin-top:4px}
+.d-foot{padding:18px 20px;border-top:1px solid var(--line)}
+.row{display:flex;justify-content:space-between;margin-bottom:6px;color:var(--muted);font-size:.92rem}
+.row.total{color:#fff;font-size:1.2rem;font-weight:800;margin:10px 0 14px}
+.full{width:100%;padding:14px;border-radius:12px;border:0;background:var(--red);color:#fff;font-weight:800;font-size:1rem}
+.full:hover{background:var(--red2)}
+.full:disabled{background:#444;cursor:not-allowed}
+.empty{text-align:center;color:var(--muted);padding:60px 0}
+.modal{position:fixed;inset:0;z-index:110;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:30px 14px}
+.modal.show{display:flex}
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;width:min(900px,100%);padding:28px;position:relative}
+.box h2{margin-bottom:18px}
+.co{display:grid;grid-template-columns:1.4fr 1fr;gap:26px}
+@media(max-width:760px){.co{grid-template-columns:1fr}.nav-links{display:none}}
+.f{display:flex;flex-direction:column;margin-bottom:12px}
+.f label{font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.f input,.f select,.f textarea{background:var(--card2);border:1px solid var(--line);color:#fff;padding:11px 12px;border-radius:9px;font-size:.92rem;outline:none;font-family:inherit}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--red)}
+.f.err input,.f.err select,.f.err textarea{border-color:var(--red2)}
+.f small{color:var(--red2);font-size:.72rem;display:none;margin-top:3px}
+.f.err small{display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sum{background:var(--card2);border-radius:14px;padding:18px;height:fit-content}
+.sum h4{margin-bottom:10px}
+.sline{display:flex;justify-content:space-between;font-size:.85rem;padding:5px 0;color:var(--muted)}
+.promo{display:flex;gap:8px;margin:12px 0}
+.promo input{flex:1;background:var(--card);border:1px solid var(--line);color:#fff;padding:10px;border-radius:9px;text-transform:uppercase;outline:none}
+.promo button{background:#fff;color:#000;border:0;border-radius:9px;padding:0 14px;font-weight:700}
+.msg{font-size:.78rem;margin-bottom:8px}
+.pay{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pay label{flex:1;min-width:110px;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px;text-align:center;font-size:.82rem;cursor:pointer}
+.pay input{display:none}
+.pay input:checked+span{color:var(--red2);font-weight:700}
+.pay label:has(input:checked){border-color:var(--red)}
+.success{text-align:center;padding:30px 10px}
+.success .big{font-size:4rem}
+.success h2{color:var(--ok)}
+.oid{background:var(--card2);display:inline-block;padding:8px 18px;border-radius:30px;margin:14px 0;font-weight:800;letter-spacing:2px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#fff;color:#000;padding:12px 22px;border-radius:30px;font-weight:700;z-index:200;transition:.3s}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#top" class="logo">DOOM<span>CAR</span></a>
+    <nav class="nav-links"><a href="#cars">Showroom</a><a href="#why">Why Doom</a><a href="#contact">Contact</a></nav>
+    <button class="cart-btn" onclick="openCart()">🛒 Cart <span class="badge" id="count">0</span></button>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div>
+    <h1>DOOM <span>CAR</span><br>STORE</h1>
+    <p>Own the extraordinary. Hand-picked hypercars and supercars, delivered to your doorstep.</p>
+    <a href="#cars" class="cta">EXPLORE SUPERCARS →</a>
+    <div class="stats">
+      <div><b>12+</b><small>Supercars</small></div>
+      <div><b>1000+</b><small>Max HP</small></div>
+      <div><b>Free</b><small>Insured Delivery</small></div>
+    </div>
+  </div>
+</div>
+
+<section id="cars">
+  <h2 class="title">THE <span>SHOWROOM</span></h2>
+  <p class="sub">Choose your machine, pick the quantity, and add to cart.</p>
+  <div class="tools">
+    <input type="text" id="search" placeholder="Search car or brand...">
+    <select id="sort">
+      <option value="default">Sort: Featured</option>
+      <option value="low">Price: Low to High</option>
+      <option value="high">Price: High to Low</option>
+      <option value="speed">Top Speed</option>
+      <option value="hp">Horsepower</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="why">
+  <h2 class="title">WHY <span>DOOM?</span></h2>
+  <p class="sub">The store built for people who live fast.</p>
+  <div class="about">
+    <div class="feat"><div class="ic">🛡️</div><h4>100% Genuine</h4><p>Every car comes with full manufacturer warranty and documents.</p></div>
+    <div class="feat"><div class="ic">🚚</div><h4>White-Glove Delivery</h4><p>Enclosed carrier, fully insured, right to your address.</p></div>
+    <div class="feat"><div class="ic">🔧</div><h4>Lifetime Support</h4><p>Service, upgrades and track-day support from our experts.</p></div>
+    <div class="feat"><div class="ic">💳</div><h4>Easy Payment</h4><p>Cards, UPI, net banking and bank transfer supported.</p></div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="logo" style="font-size:1.2rem;margin-bottom:8px">DOOM<span>CAR</span> STORE</div>
+  <p>📍 Speed Avenue, Mumbai, India &nbsp;|&nbsp; 📞 +91 98765 43210 &nbsp;|&nbsp; ✉️ hello@doomcarstore.com</p>
+  <p style="margin-top:8px">© 2026 Doom Car Store. All rights reserved.</p>
+</footer>
+
+<!-- Cart drawer -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<aside class="drawer" id="drawer">
+  <div class="d-head"><h3>🛒 Your Cart</h3><button class="x" onclick="closeAll()">×</button></div>
+  <div class="d-body" id="cartBody"></div>
+  <div class="d-foot">
+    <div class="row"><span>Subtotal</span><span id="subT">₹0</span></div>
+    <div class="row"><span>GST (28%)</span><span id="gstT">₹0</span></div>
+    <div class="row"><span>Delivery</span><span style="color:var(--ok)">FREE</span></div>
+    <div class="row total"><span>Total</span><span id="totT">₹0</span></div>
+    <button class="full" id="coBtn" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
+  </div>
+</aside>
+
+<!-- Checkout modal -->
+<div class="modal" id="modal">
+  <div class="box" id="boxContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- DATA ---------- */
+const CARS = [
+ {id:1,brand:"Lamborghini",name:"Revuelto",price:85000000,hp:1015,speed:350,acc:2.5,color:"#f5c400",stock:5,tag:"HYBRID"},
+ {id:2,brand:"Ferrari",name:"SF90 Stradale",price:78000000,hp:986,speed:340,acc:2.5,color:"#e10600",stock:4,tag:"HOT"},
+ {id:3,brand:"McLaren",name:"765LT",price:62000000,hp:755,speed:330,acc:2.8,color:"#ff7a00",stock:6,tag:"TRACK"},
+ {id:4,brand:"Bugatti",name:"Chiron Super Sport",price:320000000,hp:1578,speed:440,acc:2.3,color:"#1e6fff",stock:2,tag:"LEGEND"},
+ {id:5,brand:"Porsche",name:"911 GT3 RS",price:41000000,hp:518,speed:296,acc:3.2,color:"#c9ced6",stock:8,tag:"ICON"},
+ {id:6,brand:"Aston Martin",name:"Valkyrie",price:290000000,hp:1160,speed:402,acc:2.5,color:"#0a8f5a",stock:2,tag:"RARE"},
+ {id:7,brand:"Koenigsegg",name:"Jesko Absolut",price:250000000,hp:1600,speed:531,acc:2.5,color:"#7b2cff",stock:1,tag:"INSANE"},
+ {id:8,brand:"Pagani",name:"Huayra R",price:260000000,hp:850,speed:370,acc:2.7,color:"#b87333",stock:2,tag:"ART"},
+ {id:9,brand:"Lamborghini",name:"Huracán STO",price:49000000,hp:631,speed:310,acc:3.0,color:"#2ecc71",stock:7,tag:"RACE"},
+ {id:10,brand:"Ferrari",name:"296 GTB",price:54000000,hp:819,speed:330,acc:2.9,color:"#ff2d55",stock:6,tag:"NEW"},
+ {id:11,brand:"Mercedes-AMG",name:"ONE",price:230000000,hp:1063,speed:352,acc:2.9,color:"#9aa0a6",stock:2,tag:"F1 TECH"},
+ {id:12,brand:"Rimac",name:"Nevera",price:200000000,hp:1914,speed:412,acc:1.74,color:"#00d4ff",stock:3,tag:"ELECTRIC"}
+];
+
+const GST = 0.28;
+let cart = {};          // {id: qty}
+let picks = {};         // quantity chosen on cards
+let appliedPromo = null;
+const PROMOS = {DOOM10:0.10, SPEED5:0.05};
+
+try{ cart = JSON.parse(localStorage.getItem('doomCart')||'{}'); }catch(e){ cart = {}; }
+
+/* ---------- HELPERS ---------- */
+const $ = id => document.getElementById(id);
+const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const fmtShort = n => n>=10000000 ? '₹'+(n/10000000).toFixed(2)+' Cr' : '₹'+(n/100000).toFixed(1)+' L';
+const save = () => { try{localStorage.setItem('doomCart',JSON.stringify(cart));}catch(e){} };
+const carById = id => CARS.find(c=>c.id==id);
+
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* Car drawing (SVG) */
+function carSVG(color){
+  return `<svg viewBox="0 0 300 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+  <defs><linearGradient id="g${color.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient></defs>
+  <ellipse cx="150" cy="98" rx="125" ry="7" fill="#000" opacity=".5"/>
+  <path d="M14 82 Q16 64 52 58 L100 40 Q140 24 190 38 L232 56 Q284 62 288 82 L288 90 L14 90 Z" fill="url(#g${color.slice(1)})" stroke="${color}" stroke-width="1.5"/>
+  <path d="M104 46 Q140 32 184 44 L214 58 L96 58 Z" fill="#0b1018" opacity=".92"/>
+  <path d="M142 38 L146 58" stroke="${color}" stroke-width="2"/>
+  <rect x="266" y="70" width="20" height="5" rx="2" fill="#fff"/>
+  <rect x="14" y="68" width="14" height="5" rx="2" fill="#ff2d2d"/>
+  <circle cx="68" cy="88" r="16" fill="#111"/><circle cx="68" cy="88" r="8" fill="#888"/><circle cx="68" cy="88" r="3" fill="#222"/>
+  <circle cx="232" cy="88" r="16" fill="#111"/><circle cx="232" cy="88" r="8" fill="#888"/><circle cx="232" cy="88" r="3" fill="#222"/>
+  </svg>`;
+}
+
+/* ---------- RENDER CARS ---------- */
+function renderCars(){
+  const q = $('search').value.toLowerCase().trim();
+  const s = $('sort').value;
+  let list = CARS.filter(c => (c.brand+' '+c.name).toLowerCase().includes(q));
+  if(s==='low') list.sort((a,b)=>a.price-b.price);
+  if(s==='high') list.sort((a,b)=>b.price-a.price);
+  if(s==='speed') list.sort((a,b)=>b.speed-a.speed);
+  if(s==='hp') list.sort((a,b)=>b.hp-a.hp);
+
+  $('grid').innerHTML = list.length ? list.map(c=>{
+    picks[c.id] = picks[c.id]||1;
+    return `<div class="car">
+      <div class="pic"><span class="tag">${c.tag}</span>${carSVG(c.color)}</div>
+      <div class="info">
+        <div class="brand">${c.brand}</div>
+        <h3>${c.name}</h3>
+        <div class="specs">
+          <div><b>${c.hp}</b>HP</div><div><b>${c.speed}</b>km/h</div><div><b>${c.acc}s</b>0-100</div>
+        </div>
+        <div class="price">${fmtShort(c.price)} <small style="font-size:.7rem;color:var(--muted)">(${fmt(c.price)})</small></div>
+        <div class="stock ${c.stock<=2?'low':''}">${c.stock<=2?'⚠ Only '+c.stock+' left':'● In stock ('+c.stock+')'}</div>
+        <div class="buy">
+          <div class="qty"><button onclick="pick(${c.id},-1)">−</button><span id="pq${c.id}">${picks[c.id]}</span><button onclick="pick(${c.id},1)">+</button></div>
+          <button class="add" onclick="addToCart(${c.id})">Add to Cart</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('') : '<p class="sub">No cars found.</p>';
+}
+function pick(id,d){
+  const c=carById(id);
+  picks[id]=Math.max(1,Math.min(c.stock,(picks[id]||1)+d));
+  $('pq'+id).textContent=picks[id];
+}
+
+/* ---------- CART ---------- */
+function addToCart(id){
+  const c=carById(id);
+  const cur=cart[id]||0;
+  const add=picks[id]||1;
+  if(cur+add>c.stock){ toast('Only '+c.stock+' available for '+c.name); cart[id]=c.stock; }
+  else cart[id]=cur+add;
+  save(); updateCart(); toast('✔ '+add+' × '+c.name+' added to cart');
+}
+function changeQty(id,d){
+  const c=carById(id);
+  const n=(cart[id]||0)+d;
+  if(n<=0) delete cart[id];
+  else if(n>c.stock){ toast('Stock limit reached'); return; }
+  else cart[id]=n;
+  save(); updateCart();
+}
+function removeItem(id){ delete cart[id]; save(); updateCart(); }
+
+function totals(){
+  let sub=0; Object.keys(cart).forEach(id=>sub+=carById(id).price*cart[id]);
+  const disc = appliedPromo ? sub*PROMOS[appliedPromo] : 0;
+  const taxable = sub-disc;
+  const gst = taxable*GST;
+  return {sub,disc,gst,total:taxable+gst};
+}
+function updateCart(){
+  const ids=Object.keys(cart);
+  $('count').textContent = ids.reduce((a,id)=>a+cart[id],0);
+  $('cartBody').innerHTML = ids.length ? ids.map(id=>{
+    const c=carById(id);
+    return `<div class="item">
+      <div class="th">${carSVG(c.color)}</div>
+      <div class="meta"><b>${c.brand} ${c.name}</b><br><small>${fmtShort(c.price)} each</small><br>
+        <div class="qty" style="display:inline-flex;margin-top:6px"><button onclick="changeQty(${id},-1)">−</button><span>${cart[id]}</span><button onclick="changeQty(${id},1)">+</button></div>
+        <br><button class="rm" onclick="removeItem(${id})">Remove</button></div>
+      <b>${fmtShort(c.price*cart[id])}</b>
+    </div>`;
+  }).join('') : '<div class="empty"><div style="font-size:3rem">🏎️</div>Your cart is empty.<br>Add a supercar!</div>';
+  const t=totals();
+  $('subT').textContent=fmt(t.sub);
+  $('gstT').textContent=fmt(t.gst);
+  $('totT').textContent=fmt(t.total);
+  $('coBtn').disabled = !ids.length;
+}
+function openCart(){ $('drawer').classList.add('open'); $('overlay').classList.add('show'); }
+function closeAll(){
+  $('drawer').classList.remove('open');
+  $('modal').classList.remove('show');
+  $('overlay').classList.remove('show');
+}
+
+/* ---------- CHECKOUT ---------- */
+const STATES=["Andhra Pradesh","Delhi","Gujarat","Haryana","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Punjab","Rajasthan","Tamil Nadu","Telangana","Uttar Pradesh","West Bengal","Other"];
+
+function openCheckout(){
+  if(!Object.keys(cart).length) return;
+  $('drawer').classList.remove('open');
+  $('overlay').classList.add('show');
+  const min=new Date(Date.now()+7*86400000).toISOString().split('T')[0];
+  $('boxContent').innerHTML = `
+  <button class="x" style="position:absolute;right:18px;top:12px" onclick="closeAll()">×</button>
+  <h2>Checkout & <span style="color:var(--red)">Delivery</span></h2>
+  <div class="co">
+    <form id="coForm" onsubmit="placeOrder(event)" novalidate>
+      <div class="two">
+        <div class="f"><label>Full Name *</label><input id="fname" placeholder="John Doe"><small>Enter your name</small></div>
+        <div class="f"><label>Phone *</label><input id="fphone" placeholder="10-digit mobile" maxlength="10"><small>Enter valid 10-digit phone</small></div>
+      </div>
+      <div class="f"><label>Email *</label><input id="femail" type="email" placeholder="you@email.com"><small>Enter valid email</small></div>
+      <div class="f"><label>Delivery Address *</label><textarea id="faddr" rows="2" placeholder="House no., street, area, landmark"></textarea><small>Enter full address</small></div>
+      <div class="two">
+        <div class="f"><label>City *</label><input id="fcity" placeholder="City"><small>Enter city</small></div>
+        <div class="f"><label>PIN Code *</label><input id="fpin" placeholder="6-digit PIN" maxlength="6"><small>Enter valid 6-digit PIN</small></div>
+      </div>
+      <div class="two">
+        <div class="f"><label>State *</label><select id="fstate"><option value="">Select state</option>${STATES.map(s=>`<option>${s}</option>`).join('')}</select><small>Select state</small></div>
+        <div class="f"><label>Delivery Date *</label><input id="fdate" type="date" min="${min}"><small>Pick a delivery date</small></div>
+      </div>
+      <div class="f"><label>Delivery Method</label>
+        <select id="fdel"><option>Enclosed Carrier – Free</option><option>Showroom Pickup – Free</option><option>Express Air + Road – Free</option></select></div>
+      <label style="font-size:.78rem;color:var(--muted)">Payment Method</label>
+      <div class="pay" style="margin-top:4px">
+        <label><input type="radio" name="pay" value="Card" checked><span>💳 Card</span></label>
+        <label><input type="radio" name="pay" value="UPI"><span>📱 UPI</span></label>
+        <label><input type="radio" name="pay" value="Net Banking"><span>🏦 Net Banking</span></label>
+        <label><input type="radio" name="pay" value="Bank Transfer"><span>💼 Bank Transfer</span></label>
+      </div>
+      <button class="full" type="submit">PLACE ORDER</button>
+    </form>
+    <div class="sum" id="sumBox"></div>
+  </div>`;
+  renderSummary();
+  $('modal').classList.add('show');
+}
+function renderSummary(){
+  const t=totals();
+  $('sumBox').innerHTML = `<h4>Order Summary</h4>
+  ${Object.keys(cart).map(id=>{const c=carById(id);return `<div class="sline"><span>${c.brand} ${c.name} × ${cart[id]}</span><span>${fmtShort(c.price*cart[id])}</span></div>`}).join('')}
+  <div class="promo"><input id="promoIn" placeholder="Promo code" value="${appliedPromo||''}"><button type="button" onclick="applyPromo()">Apply</button></div>
+  <div class="msg" id="promoMsg" style="color:var(--ok)">${appliedPromo?'✔ '+appliedPromo+' applied':'Try DOOM10 or SPEED5'}</div>
+  <div class="sline"><span>Subtotal</span><span>${fmt(t.sub)}</span></div>
+  ${t.disc?`<div class="sline" style="color:var(--ok)"><span>Discount</span><span>−${fmt(t.disc)}</span></div>`:''}
+  <div class="sline"><span>GST (28%)</span><span>${fmt(t.gst)}</span></div>
+  <div class="sline"><span>Delivery</span><span style="color:var(--ok)">FREE</span></div>
+  <div class="row total" style="margin-top:12px"><span>Total</span><span>${fmt(t.total)}</span></div>`;
+}
+function applyPromo(){
+  const code=$('promoIn').value.trim().toUpperCase();
+  if(PROMOS[code]){ appliedPromo=code; renderSummary(); toast('Promo applied!'); }
+  else { appliedPromo=null; renderSummary(); $('promoMsg').style.color='var(--red2)'; $('promoMsg').textContent='Invalid promo code'; }
+}
+function bad(id,cond){ $(id).parentElement.classList.toggle('err',cond); return cond; }
+
+function placeOrder(e){
+  e.preventDefault();
+  let err=false;
+  err = bad('fname',$('fname').value.trim().length<2) || err;
+  err = bad('fphone',!/^[6-9]\d{9}$/.test($('fphone').value.trim())) || err;
+  err = bad('femail',!/^\S+@\S+\.\S+$/.test($('femail').value.trim())) || err;
+  err = bad('faddr',$('faddr').value.trim().length<10) || err;
+  err = bad('fcity',$('fcity').value.trim().length<2) || err;
+  err = bad('fpin',!/^\d{6}$/.test($('fpin').value.trim())) || err;
+  err = bad('fstate',!$('fstate').value) || err;
+  err = bad('fdate',!$('fdate').value) || err;
+  if(err){ toast('Please fix the highlighted fields'); return; }
+
+  const t=totals();
+  const oid='DOOM'+Math.floor(100000+Math.random()*900000);
+  const pay=document.querySelector('input[name=pay]:checked').value;
+  const name=$('fname').value.trim(), addr=`${$('faddr').value.trim()}, ${$('fcity').value.trim()}, ${$('fstate').value} - ${$('fpin').value.trim()}`;
+  const date=new Date($('fdate').value).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+
+  // reduce stock
+  Object.keys(cart).forEach(id=>{ carById(id).stock=Math.max(0,carById(id).stock-cart[id]); });
+  cart={}; appliedPromo=null; save(); updateCart(); renderCars();
+
+  $('boxContent').innerHTML = `<div class="success">
+    <div class="big">🏁</div>
+    <h2>Order Confirmed!</h2>
+    <p style="color:var(--muted)">Thank you, <b style="color:#fff">${name}</b>. Your dream machine is on its way.</p>
+    <div class="oid">${oid}</div>
+    <div class="sum" style="text-align:left;max-width:460px;margin:10px auto">
+      <div class="sline"><span>Deliver to</span><span style="text-align:right;max-width:60%">${addr}</span></div>
+      <div class="sline"><span>Delivery date</span><span>${date}</span></div>
+      <div class="sline"><span>Payment</span><span>${pay}</span></div>
+      <div class="sline" style="color:#fff;font-weight:800"><span>Total paid</span><span>${fmt(t.total)}</span></div>
+    </div>
+    <p style="color:var(--muted);font-size:.85rem;margin:12px 0 18px">A confirmation has been sent to ${$('femail').value.trim()}.</p>
+    <button class="cta" onclick="closeAll()">CONTINUE SHOPPING</button>
+  </div>`;
+}
+
+/* ---------- INIT ---------- */
+$('search').addEventListener('input',renderCars);
+$('sort').addEventListener('change',renderCars);
+renderCars(); updateCart();
+</script>
+</body>
+</html> 
